@@ -1,0 +1,33 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  min-height: 50vh;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.search-bar {
+  width: 25%;
+  margin-left: 5px;
+  border-radius: 25px;
+  border: 2px solid #dad8d8;
+  padding: 20px;
+}
+
+input:focus {
+  outline: none !important;
+  border: 2px solid #408cd7;
+  box-shadow: 0 0 10px #6e98ed;
+}
+
+.search-button{
+  display: inline-block;
+}
+
+.search-icon {
+  object-fit: contain;
+  width: 30px;
+  height: 30px;
+}
