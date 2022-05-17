@@ -34,3 +34,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .project
 .classpath
+
+.idea

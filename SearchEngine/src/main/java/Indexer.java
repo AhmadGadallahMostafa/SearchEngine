@@ -21,11 +21,12 @@ public class Indexer {
     public static final String DATABASE_NAME = "SearchEngineDB";
     public static final String DOCUMENTS_COLLECTION = "Documents";
 
-    public static final String STOP_WORD_FILE_PATH = "C:\\Users\\Ahmed\\Documents\\GitHub\\SearchEngine\\SearchEngine\\src\\main\\stopwords.txt";
+    public static final String STOP_WORD_FILE_PATH = System.getProperty("user.dir") + "/src/main/stopwords.txt";
 
-    public static final String DOWNLOADS_DIRECTORY = "C:\\Users\\Ahmed\\Documents\\GitHub\\SearchEngine\\SearchEngine\\src\\main\\Downloads\\";
+    public static final String DOWNLOADS_DIRECTORY = System.getProperty("user.dir") + "/src/main/Downloads/";
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        System.out.println(STOP_WORD_FILE_PATH);
         MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
         MongoDatabase SearchEngineDb = mongoClient.getDatabase(DATABASE_NAME);
         MongoCollection<Document> collection = SearchEngineDb.getCollection(DOCUMENTS_COLLECTION);
@@ -40,7 +41,7 @@ public class Indexer {
     public static void downloadDocument(String url, String title) throws IOException, InterruptedException {
         // download document from url as html
         org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
-        File file = new File( DOWNLOADS_DIRECTORY + title + ".html");
+        File file = new File(DOWNLOADS_DIRECTORY + title + ".html");
 
         // write to a file.html
         PrintWriter writer = new PrintWriter(file,"UTF-8");
