@@ -1,5 +1,6 @@
 package sourcePackage;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.jsoup.Jsoup;
@@ -24,18 +25,20 @@ public class Indexer {
         MongoDatabase searchEngineDb = mongoClient.getDatabase(DATABASE_NAME);
         MongoCollection<Document> crawledDocuments = searchEngineDb.getCollection(DOCUMENTS_COLLECTION);
         // Read the indexed URLs file
-        readIndexedURLs();
+       readIndexedURLs();
         // Iterate over the documents collection
         FindIterable<Document> cursor = crawledDocuments.find();
         for (Document doc : cursor) {
             String url = doc.getString("url");
+            String id = doc.getString("_id");
             if(indexedURLs.contains(url))
                 continue;
             String title = downloadDocument(url);
             indexedURLs.add(url);
-            generateIndex(title, url);
+            generateIndex(title, id);
         }
-        System.out.println(invertedIndex);
+        writeIndexedURLs();
+        writeToDB(invertedIndex, searchEngineDb);
         mongoClient.close();
     }
 
@@ -43,6 +46,7 @@ public class Indexer {
         // download document from url as html
         org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
         String title = doc.title();
+        title = title.replaceAll("[^a-zA-Z0-9]", "");
         if (title.equals("")) {
             title = "No Title" + untitledDocsCount;
             untitledDocsCount++;
@@ -80,7 +84,7 @@ public class Indexer {
         return title;
     }
 
-    public static void generateIndex(String title, String url) throws IOException {
+    public static void generateIndex(String title, String id) throws IOException {
         // read file and remove stop words
         File htmlFile = new File(DOWNLOADS_DIRECTORY + title + ".html");
         org.jsoup.nodes.Document doc = Jsoup.parse(htmlFile, "UTF-8");
@@ -111,10 +115,11 @@ public class Indexer {
                     // get the first map
                     HashMap<String, HashMap<String, Integer>> firstMap = invertedIndex.get(stemmedWord);
                     // check if the document title is in the inner map
-                    if (firstMap.containsKey(url))
+                    if (firstMap.containsKey(id))
                     {
                         // check on the tag
-                        HashMap<String, Integer> secondMap = firstMap.get(url);
+                        HashMap<String, Integer> secondMap = firstMap.get(id);
+                        secondMap.put("localFreq", secondMap.get("localFreq") + 1);
                         // check if the tag has this word
                         if (secondMap.containsKey(element.tagName()))
                             secondMap.put(element.tagName(), secondMap.get(element.tagName()) + 1);
@@ -125,8 +130,9 @@ public class Indexer {
                     {
                         // add the document title to the map
                         HashMap<String, Integer> secondMap = new HashMap<>();
+                        secondMap.put("localFreq", 1);
                         secondMap.put(element.tagName(), 1);
-                        firstMap.put(url, secondMap);
+                        firstMap.put(id, secondMap);
                     }
                 }
                 else
@@ -135,7 +141,8 @@ public class Indexer {
                     HashMap<String, HashMap<String, Integer>> firstMap = new HashMap<>();
                     HashMap<String, Integer> secondMap = new HashMap<>();
                     secondMap.put(element.tagName(), 1);
-                    firstMap.put(url, secondMap);
+                    secondMap.put("localFreq", 1);
+                    firstMap.put(id, secondMap);
                     invertedIndex.put(stemmedWord, firstMap);
                 }
             }
@@ -172,6 +179,36 @@ public class Indexer {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    public static void writeIndexedURLs()
+    {
+        // write the indexed urls to the file
+        File file = new File(INDEXED_URLS_FILE_PATH);
+        try (
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        ) {
+            for (String url : indexedURLs) {
+                writer.write(url);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase)
+    {
+        // write the inverted index to the database
+        MongoCollection<Document> invertedIndexCollection = mongoDatabase.getCollection(INVERTED_INDEX_COLLECTION);
+        for (String word : invertedIndex.keySet())
+        {
+            // get the first map
+            HashMap<String, HashMap<String, Integer>> firstMap = invertedIndex.get(word);
+            // add the word and its value to a doc
+            Document document = new Document();
+            document.append(word, firstMap);
+            // insert the doc to the collection
+            invertedIndexCollection.insertOne(document);
         }
     }
 }

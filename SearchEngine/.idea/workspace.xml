@@ -5,18 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17298d71-367a-4a22-94d8-f8c0eaefb1df" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/Downloads/فيسبوك.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/indexedURLs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Downloads/No Title0.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Downloads/Thetop10causesofdeath.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Downloads/deathDefinitionTypesMeaningCultureFactsBritannica.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/indexedURLs.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/ClassesInCSharp.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Downloads/Google.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/test.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/testTwo.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/webco.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/webco.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/indexedURLs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,5 +103,10 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="doc" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
