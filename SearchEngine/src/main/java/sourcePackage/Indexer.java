@@ -196,19 +196,32 @@ public class Indexer {
             e.printStackTrace();
         }
     }
-    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase)
-    {
-        // write the inverted index to the database
-        MongoCollection<Document> invertedIndexCollection = mongoDatabase.getCollection(INVERTED_INDEX_COLLECTION);
-        for (String word : invertedIndex.keySet())
-        {
-            // get the first map
-            HashMap<String, HashMap<String, Integer>> firstMap = invertedIndex.get(word);
-            // add the word and its value to a doc
-            Document document = new Document();
-            document.append(word, firstMap);
-            // insert the doc to the collection
-            invertedIndexCollection.insertOne(document);
+    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase) throws InterruptedException {
+        ArrayList<String> words = new ArrayList<>();
+        for (String word : invertedIndex.keySet()) {
+            words.add(word);
         }
+        Thread t0 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
+        Thread t1 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
+        Thread t2 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
+        Thread t3 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
+
+        // Set the name of each thread
+        t0.setName("0");
+        t1.setName("1");
+        t2.setName("2");
+        t3.setName("3");
+        // time of thread execution
+        long startTime = System.currentTimeMillis();
+        t0.start();
+        t1.start();
+        t2.start();
+        t3.start();
+        t0.join();
+        t1.join();
+        t2.join();
+        t3.join();
+        long endTime = System.currentTimeMillis();
+        System.out.println("Time taken to write to DB: " + (endTime - startTime) + " ms");
     }
 }
