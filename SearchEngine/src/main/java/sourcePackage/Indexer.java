@@ -1,8 +1,7 @@
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
+package sourcePackage;
+
+import com.mongodb.client.*;
 import org.bson.Document;
-import com.mongodb.client.MongoDatabase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -11,41 +10,43 @@ import org.jsoup.select.Elements;
 import ca.rmen.porterstemmer.PorterStemmer;
 import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+
+import static sourcePackage.Constants.*;
 
 
 public class Indexer {
-    public static final String CONNECTION_STRING = "mongodb+srv://admin:1234567890@searchenginedb.alail.mongodb.net/?retryWrites=true&w=majority";
-    public static final String DATABASE_NAME = "SearchEngineDB";
-    public static final String DOCUMENTS_COLLECTION = "Documents";
-
-    public static final String STOP_WORD_FILE_PATH = System.getProperty("user.dir") + "/src/main/stopwords.txt";
-
-    public static final String DOWNLOADS_DIRECTORY = System.getProperty("user.dir") + "/src/main/Downloads/";
     public static HashSet<String> stopWords = new HashSet<>();
-    public static HashMap<String, HashMap<String, HashMap<String, Integer>>> InvertedIndex = new HashMap<>();
-    public static final ArrayList<String> finalList = new ArrayList<String>(Arrays.asList("h1", "h2", "h3", "h4", "h5", "h6", "p", "title", "li", "a", "div"));
-
+    public static ArrayList<String> indexedURLs = new ArrayList<>();
+    public static HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex = new HashMap<>();
     public static void main(String[] args) throws IOException, InterruptedException {
         MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
-        MongoDatabase SearchEngineDb = mongoClient.getDatabase(DATABASE_NAME);
-        MongoCollection<Document> collection = SearchEngineDb.getCollection(DOCUMENTS_COLLECTION);
-        // access element at collection
-        downloadDocument("https://www.geeksforgeeks.org/c-sharp-class-and-object/#:~:text=A%20class%20is%20a%20user,derived%20classes%20and%20base%20classes.", "geeksforgeeks");
-        downloadDocument("https://www.w3schools.com/cs/cs_classes.php", "w3s");
-        stopWords = populateStopWords();
-        removeStopWords("geeksforgeeks");  // Tokens has each word in the document tokenized and without stop words
-        removeStopWords("w3s");
-        System.out.println(InvertedIndex);
+        MongoDatabase searchEngineDb = mongoClient.getDatabase(DATABASE_NAME);
+        MongoCollection<Document> crawledDocuments = searchEngineDb.getCollection(DOCUMENTS_COLLECTION);
+        // Read the indexed URLs file
+        readIndexedURLs();
+        // Iterate over the documents collection
+        FindIterable<Document> cursor = crawledDocuments.find();
+        for (Document doc : cursor) {
+            String url = doc.getString("url");
+            if(indexedURLs.contains(url))
+                continue;
+            String title = downloadDocument(url);
+            indexedURLs.add(url);
+            generateIndex(title, url);
+        }
+        System.out.println(invertedIndex);
+        mongoClient.close();
     }
 
-    public static void downloadDocument(String url, String title) throws IOException, InterruptedException {
+    public static String downloadDocument(String url) throws IOException, InterruptedException {
         // download document from url as html
         org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
+        String title = doc.title();
+        if (title.equals("")) {
+            title = "No Title" + untitledDocsCount;
+            untitledDocsCount++;
+        }
         File file = new File(DOWNLOADS_DIRECTORY + title + ".html");
 
         // write to a file.html
@@ -76,9 +77,10 @@ public class Indexer {
         writer.write(doc.body().toString());
         writer.flush();
         writer.close();
+        return title;
     }
 
-    public static void removeStopWords(String title) throws IOException {
+    public static void generateIndex(String title, String url) throws IOException {
         // read file and remove stop words
         File htmlFile = new File(DOWNLOADS_DIRECTORY + title + ".html");
         org.jsoup.nodes.Document doc = Jsoup.parse(htmlFile, "UTF-8");
@@ -88,7 +90,7 @@ public class Indexer {
         for (Element element: elements)
         {
             // We only want to index the words in the finalList tags
-            if (!finalList.contains(element.tagName()))
+            if (!TAGS_LIST.contains(element.tagName()))
                 continue;
             // to avoid getting nested word of elements
             String text = element.ownText();
@@ -104,15 +106,15 @@ public class Indexer {
                 if (stopWords.contains(stemmedWord) || !word.matches("[a-zA-Z0-9]+"))
                     continue;
                 // check on the map if this is a new word
-                if (InvertedIndex.containsKey(stemmedWord))
+                if (invertedIndex.containsKey(stemmedWord))
                 {
                     // get the first map
-                    HashMap<String, HashMap<String, Integer>> firstMap = InvertedIndex.get(stemmedWord);
+                    HashMap<String, HashMap<String, Integer>> firstMap = invertedIndex.get(stemmedWord);
                     // check if the document title is in the inner map
-                    if (firstMap.containsKey(title))
+                    if (firstMap.containsKey(url))
                     {
                         // check on the tag
-                        HashMap<String, Integer> secondMap = firstMap.get(title);
+                        HashMap<String, Integer> secondMap = firstMap.get(url);
                         // check if the tag has this word
                         if (secondMap.containsKey(element.tagName()))
                             secondMap.put(element.tagName(), secondMap.get(element.tagName()) + 1);
@@ -124,7 +126,7 @@ public class Indexer {
                         // add the document title to the map
                         HashMap<String, Integer> secondMap = new HashMap<>();
                         secondMap.put(element.tagName(), 1);
-                        firstMap.put(title, secondMap);
+                        firstMap.put(url, secondMap);
                     }
                 }
                 else
@@ -133,8 +135,8 @@ public class Indexer {
                     HashMap<String, HashMap<String, Integer>> firstMap = new HashMap<>();
                     HashMap<String, Integer> secondMap = new HashMap<>();
                     secondMap.put(element.tagName(), 1);
-                    firstMap.put(title, secondMap);
-                    InvertedIndex.put(stemmedWord, firstMap);
+                    firstMap.put(url, secondMap);
+                    invertedIndex.put(stemmedWord, firstMap);
                 }
             }
         }
@@ -156,5 +158,20 @@ public class Indexer {
             e.printStackTrace();
         }
         return stopWords;
+    }
+    public static void readIndexedURLs()
+    {
+        // read the indexed urls from the file
+        File file = new File(INDEXED_URLS_FILE_PATH);
+        try (
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+        ) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                indexedURLs.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
