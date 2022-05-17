@@ -38,7 +38,7 @@ public class Indexer {
         // access element at collection
         downloadDocument("https://www.geeksforgeeks.org/c-sharp-class-and-object/#:~:text=A%20class%20is%20a%20user,derived%20classes%20and%20base%20classes.", "ClassesInCSharp");
         stopWords = populateStopWords();
-        removeStopWords("test");  // Tokens has each word in the document tokenized and without stop words
+        removeStopWords("ClassesInCSharp");  // Tokens has each word in the document tokenized and without stop words
         System.out.println(InvertedIndex);
     }
 
@@ -100,7 +100,7 @@ public class Indexer {
             {
                 String stemmedWord = stemmer.stemWord(word);
                 // if the word is a stop word then skip it
-                if (stopWords.contains(stemmedWord))
+                if (stopWords.contains(stemmedWord) || !word.matches("[a-zA-Z0-9]+"))
                     continue;
                 // check on the map if this is a new word
                 if (InvertedIndex.containsKey(stemmedWord))
@@ -155,5 +155,4 @@ public class Indexer {
         }
         return stopWords;
     }
-
 }
