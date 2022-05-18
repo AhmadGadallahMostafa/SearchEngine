@@ -10,15 +10,16 @@ public final class Constants {
     public static final String DATABASE_NAME = "SearchEngine";
     public static final String DOCUMENTS_COLLECTION = "Documents";
     public static final String INVERTED_INDEX_COLLECTION = "InvertedIndex";
+    public static final String POPULARITY_COLLECTION = "Popularity";
 
-    public static final String STOP_WORD_FILE_PATH = System.getProperty("user.dir") + "/SearchEngine/src/main/stopwords.txt";
+    public static final String STOP_WORD_FILE_PATH = System.getProperty("user.dir") + "/src/main/stopwords.txt";
 
-    public static final String STATE_CRAWLER_FILE_PATH = System.getProperty("user.dir") + "/SearchEngine/src/main/state.txt";
+    public static final String STATE_CRAWLER_FILE_PATH = System.getProperty("user.dir") + "/src/main/state.txt";
 
-    public static final String CRAWLER_FILE_PATH = System.getProperty("user.dir") + "/SearchEngine/src/main/crawlerTest.txt";
-    public static final String INDEXED_URLS_FILE_PATH = System.getProperty("user.dir") + "/SearchEngine/src/main/indexedURLs.txt";
+    public static final String CRAWLER_FILE_PATH = System.getProperty("user.dir") + "/src/main/crawlerTest.txt";
+    public static final String INDEXED_URLS_FILE_PATH = System.getProperty("user.dir") + "/src/main/indexedURLs.txt";
 
-    public static final String DOWNLOADS_DIRECTORY = System.getProperty("user.dir") + "/SearchEngine/src/main/Downloads/";
+    public static final String DOWNLOADS_DIRECTORY = System.getProperty("user.dir") + "/src/main/Downloads/";
 
     public static final Integer SEED_URL_COUNT = 6;
 

@@ -5,20 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17298d71-367a-4a22-94d8-f8c0eaefb1df" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/Downloads/No Title0.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Downloads/Thetop10causesofdeath.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/Downloads/deathDefinitionTypesMeaningCultureFactsBritannica.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/indexedURLs.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/ClassesInCSharp.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/test.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/testTwo.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/webco.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/webco.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/indexedURLs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/crawlerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/crawlerTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/indexedURLs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/indexedURLs.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/DBAccessIndexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/DBAccessIndexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/state.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +55,20 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.sourcePackage.Indexer">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sourcePackage.App" />
+      <module name="SearchEngine" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sourcePackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="sourcePackage.Indexer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="sourcePackage.Indexer" />
       <module name="SearchEngine" />
@@ -66,6 +79,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.sourcePackage.Indexer" />
+        <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
   </component>

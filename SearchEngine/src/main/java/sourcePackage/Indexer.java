@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import ca.rmen.porterstemmer.PorterStemmer;
 import java.io.*;
 
+import java.net.URL;
 import java.util.*;
 
 import static sourcePackage.Constants.*;
@@ -18,7 +19,11 @@ import static sourcePackage.Constants.*;
 public class Indexer {
     public static HashSet<String> stopWords = new HashSet<>();
     public static ArrayList<String> indexedURLs = new ArrayList<>();
+    public static ArrayList<String> tempUrls = new ArrayList<>();
+    public static ArrayList<String> ids = new ArrayList<>();
     public static HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex = new HashMap<>();
+    public static HashMap<String, ArrayList<String>> popularityMap = new HashMap<>();
+
     public static void main(String[] args) throws IOException, InterruptedException {
         MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
         MongoDatabase searchEngineDb = mongoClient.getDatabase(DATABASE_NAME);
@@ -27,24 +32,31 @@ public class Indexer {
        readIndexedURLs();
         // Iterate over the documents collection
         FindIterable<Document> cursor = crawledDocuments.find();
+        for (Document doc : cursor)
+        {
+            tempUrls.add(doc.getString("url"));
+            ids.add(doc.getString("_id"));
+            ArrayList<String> tmp = new ArrayList<>();
+            popularityMap.put(doc.getString("_id"), tmp);
+        }
         for (Document doc : cursor) {
             String url = doc.getString("url");
             String id = doc.getString("_id");
             if(indexedURLs.contains(url))
                 continue;
-            String title = downloadDocument(url);
+            String title = downloadDocument(url, id);
             if (title.equals(""))
                 continue;
             indexedURLs.add(url);
             generateIndex(title, id);
         }
         writeIndexedURLs();
-        writeToDB(invertedIndex, searchEngineDb);
+        writeToDB(invertedIndex, popularityMap, searchEngineDb);
 
         mongoClient.close();
     }
 
-    public static String downloadDocument(String url) throws IOException, InterruptedException {
+    public static String downloadDocument(String url, String id) throws IOException, InterruptedException {
         // download document from url as html
         org.jsoup.nodes.Document doc;
         try {
@@ -62,6 +74,30 @@ public class Indexer {
 
         // write to a file.html
         PrintWriter writer = new PrintWriter(file,"UTF-8");
+        // build the pop map
+        Elements hyperLinks = doc.select("a[href]");
+        // get the link as string from each hyperlink
+        for (Element link :hyperLinks) {
+            String innerURL = link.attr("href");
+            try {
+                // check the string retrieved is url
+                URL UR = new URL(innerURL);
+                UR.toURI();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                continue;
+            }
+            if (tempUrls.contains(innerURL) && !innerURL.equals(url)) {
+                // check on the popular map
+                if (popularityMap.containsKey(id)) {
+                    ArrayList<String> temp = popularityMap.get(id);
+                    if (!temp.contains(innerURL)) {
+                        temp.add(innerURL);
+                        popularityMap.put(id, temp);
+                    }
+                }
+            }
+        }
 
         // Code to remove all the inline html attributes and only keep tags
         Elements el = doc.getAllElements();
@@ -205,16 +241,20 @@ public class Indexer {
             e.printStackTrace();
         }
     }
-    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase) throws IOException, InterruptedException {
+    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, HashMap<String, ArrayList<String>>popularityMap, MongoDatabase mongoDatabase) throws IOException, InterruptedException {
         // write the inverted index to the database
         ArrayList<String> words = new ArrayList<>();
+        ArrayList<String> urls = new ArrayList<>();
         for (String word : invertedIndex.keySet()) {
             words.add(word);
         }
-        Thread t0 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
-        Thread t1 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
-        Thread t2 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
-        Thread t3 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
+        for (String url : popularityMap.keySet()) {
+            urls.add(url);
+        }
+        Thread t0 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, popularityMap, words, ids));
+        Thread t1 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, popularityMap, words, ids));
+        Thread t2 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, popularityMap, words, ids));
+        Thread t3 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, popularityMap, words, ids));
 
         // Set the name of each thread
         t0.setName("0");
