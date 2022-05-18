@@ -13,7 +13,11 @@ function Home() {
     return (
         <div className="App">
             <div className="App-header" style={{ backgroundImage: `url(${logo})`}} onClick={(e) => navigate('/')}/>
-            <input className= "search-bar" type="text" onChange={(e) => setText(e.target.value)} value = {text}/>
+            <input className= "search-bar" type="text" onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            console.log("ana enter");
+                            handleClick();
+                        }}} onChange={(e) => setText(e.target.value)} value = {text}/>
             <img className = "search-button" src={search} alt="search"  onClick = {() => {handleClick()}}/>
         </div>
     );

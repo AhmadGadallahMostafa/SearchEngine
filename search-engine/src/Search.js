@@ -33,7 +33,11 @@ function Search () {
             <div className="image-container">
                 <img className="search-logo"src= {logo} alt="linkdig" onClick={(e) => navigate('/')}/>
             </div>
-            <input className= "search-bar-nav" type="text" onChange={(e) => setText(e.target.value)} value = {text}/>
+            <input className= "search-bar-nav" type="text" onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            console.log("ana enter");
+                            handleClick();
+                        }}} onChange={(e) => setText(e.target.value)} value = {text}/>
             <img className = "search-button-nav" src={search} alt="search"  onClick = {() => {handleClick()}}/>
         </div>
         {links && links.map(link => {
