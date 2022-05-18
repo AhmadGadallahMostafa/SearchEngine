@@ -35,6 +35,7 @@ function Search () {
             setpageCount(Math.ceil(total / per_page));
             setLinks(data);
         }
+        console.log(pageCount);
         getLinks();
     }, [per_page]);
 
@@ -49,6 +50,7 @@ function Search () {
     const handlePageClick = async (data) => {
         let currentPage = data.selected + 1;
         console.log(currentPage);
+        setLinks([]);
         const linksFormServer = await fetchLinks(currentPage);
         setLinks(linksFormServer);
     };
@@ -65,15 +67,15 @@ function Search () {
                         }}} onChange={(e) => setText(e.target.value)} value = {text}/>
             <img className = "search-button-nav" src={search} alt="search"  onClick = {() => {handleClick()}}/>
         </div>
-        {console.log(links)}
         <Links links={links}/>
+        {console.log(pageCount)}
         <ReactPaginate
             previousLabel={"previous"}
             nextLabel={"next"}
             breakLabel={"..."}
             pageCount={pageCount}
             marginPagesDisplayed={2}
-            pageRangeDisplayed={3}
+            pageRangeDisplayed={1}
             onPageChange={handlePageClick}
             containerClassName={"pagination justify-content-center"}
             pageClassName={"page-item"}
