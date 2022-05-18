@@ -6,18 +6,17 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static sourcePackage.Constants.INVERTED_INDEX_COLLECTION;
 
-public class DBAccess implements Runnable {
+public class DBAccessIndexer implements Runnable {
 
     private MongoDatabase DB;
     private HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex;
 
     private ArrayList<String> words = new ArrayList<>();
 
-    public DBAccess(MongoDatabase db, HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, ArrayList<String> words) {
+    public DBAccessIndexer(MongoDatabase db, HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, ArrayList<String> words) {
         this.DB = db;
         this.invertedIndex = invertedIndex;
         this.words = words;

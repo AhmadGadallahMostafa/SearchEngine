@@ -1,6 +1,5 @@
 package sourcePackage;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.jsoup.Jsoup;
@@ -39,6 +38,7 @@ public class Indexer {
         }
         writeIndexedURLs();
         writeToDB(invertedIndex, searchEngineDb);
+
         mongoClient.close();
     }
 
@@ -196,15 +196,16 @@ public class Indexer {
             e.printStackTrace();
         }
     }
-    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase) throws InterruptedException {
+    public static void writeToDB(HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex, MongoDatabase mongoDatabase) throws IOException, InterruptedException {
+        // write the inverted index to the database
         ArrayList<String> words = new ArrayList<>();
         for (String word : invertedIndex.keySet()) {
             words.add(word);
         }
-        Thread t0 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
-        Thread t1 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
-        Thread t2 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
-        Thread t3 = new Thread(new DBAccess(mongoDatabase, invertedIndex, words));
+        Thread t0 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
+        Thread t1 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
+        Thread t2 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
+        Thread t3 = new Thread(new DBAccessIndexer(mongoDatabase, invertedIndex, words));
 
         // Set the name of each thread
         t0.setName("0");
