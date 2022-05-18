@@ -30,9 +30,3 @@ input:focus {
   left: -45px;
   top: 10px;
 }
-
-.search-icon {
-  object-fit: contain;
-  width: 30px;
-  height: 30px;
-}
