@@ -39,7 +39,7 @@ function Search () {
         {links && links.map(link => {
             return (
                 <div className="search-container" key ={link.url}>
-                    <div className="search-title">{link.title}</div>
+                    <a href={link.url} target="_blank" className="search-title">{link.title}</a>
                     <div className="search-description">{link.description}</div>
                 </div>
             )
