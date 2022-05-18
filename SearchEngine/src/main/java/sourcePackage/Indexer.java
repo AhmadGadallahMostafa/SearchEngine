@@ -131,6 +131,7 @@ public class Indexer {
                         // add the document title to the map
                         HashMap<String, Integer> secondMap = new HashMap<>();
                         secondMap.put("localFreq", 1);
+                        secondMap.put("docLength", doc.body().text().split(" ").length);
                         secondMap.put(element.tagName(), 1);
                         firstMap.put(id, secondMap);
                     }
@@ -142,6 +143,7 @@ public class Indexer {
                     HashMap<String, Integer> secondMap = new HashMap<>();
                     secondMap.put(element.tagName(), 1);
                     secondMap.put("localFreq", 1);
+                    secondMap.put("docLength", doc.body().text().split(" ").length);
                     firstMap.put(id, secondMap);
                     invertedIndex.put(stemmedWord, firstMap);
                 }
