@@ -33,6 +33,8 @@ public class Indexer {
             if(indexedURLs.contains(url))
                 continue;
             String title = downloadDocument(url);
+            if (title.equals(""))
+                continue;
             indexedURLs.add(url);
             generateIndex(title, id);
         }
@@ -44,7 +46,12 @@ public class Indexer {
 
     public static String downloadDocument(String url) throws IOException, InterruptedException {
         // download document from url as html
-        org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
+        org.jsoup.nodes.Document doc;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (Exception e) {
+            return "";
+        }
         String title = doc.title();
         title = title.replaceAll("[^a-zA-Z0-9]", "");
         if (title.equals("")) {

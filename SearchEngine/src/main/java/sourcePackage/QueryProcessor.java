@@ -19,8 +19,6 @@ public class QueryProcessor {
     private static ArrayList<String> stemmedWords = new ArrayList<>();
     private static MongoDatabase DB;
 
-    private static HashMap<String, HashMap<String, HashMap<String, Integer>>> invertedIndex;
-
     private static HashMap<String, Double> docsScores = new HashMap<>();
     // define constructor
 
