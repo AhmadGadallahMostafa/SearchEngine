@@ -8,6 +8,10 @@
   background-position: center;
 }
 
+.App-header:hover{
+  cursor: pointer;
+}
+
 .search-bar {
   width: 25%;
   margin-left: 25px;
@@ -29,4 +33,8 @@ input:focus {
   position: relative;
   left: -45px;
   top: 10px;
+}
+
+.search-button:hover{
+  cursor: pointer;
 }
