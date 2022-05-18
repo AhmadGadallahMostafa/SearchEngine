@@ -63,3 +63,29 @@ input:focus {
     color: #898989;
     margin-bottom: 10px;
 }
+.pagination {
+    display: inline-block;
+    padding-inline-start: 12px;
+    margin-bottom: 5px;
+}
+
+.page-item{
+    display: block;
+    float: left;
+}
+
+.page-link {
+    display: block;
+    padding: 10px;
+    font-size: 20px;
+    color: #408cd7;
+    text-decoration: none;
+}
+
+.page-link:hover, .page-link:focus{
+    background-color: #b9bec3;
+    color: rgb(15, 15, 15);
+    border-radius: 40%;
+    cursor: pointer;
+}
+

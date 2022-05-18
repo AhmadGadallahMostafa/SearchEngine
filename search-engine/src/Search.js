@@ -68,14 +68,13 @@ function Search () {
             <img className = "search-button-nav" src={search} alt="search"  onClick = {() => {handleClick()}}/>
         </div>
         <Links links={links}/>
-        {console.log(pageCount)}
         <ReactPaginate
-            previousLabel={"previous"}
-            nextLabel={"next"}
+            previousLabel={"<"}
+            nextLabel={">"}
             breakLabel={"..."}
             pageCount={pageCount}
             marginPagesDisplayed={2}
-            pageRangeDisplayed={1}
+            pageRangeDisplayed={2}
             onPageChange={handlePageClick}
             containerClassName={"pagination justify-content-center"}
             pageClassName={"page-item"}
