@@ -4,7 +4,7 @@ import './Search.css';
 function Links(props) {
 return (
     <div className="links">
-    {props.links.map((link) => {
+    {props.links && props.links.map((link) => {
     return (
         <div className="search-container" key ={link.url}>
             <a href={link.url} target="_blank" className="search-title">{link.title}</a>

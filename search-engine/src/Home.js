@@ -1,5 +1,6 @@
 import './Home.css';
 import {useState} from 'react';
+import axios from "axios";
 import logo from './logo.png';
 import search from './search.png'; 
 import { useNavigate } from "react-router-dom";
@@ -9,8 +10,10 @@ import reset from './reset.png';
 function Home() {
     const [text, setText] = useState('');
     let navigate = useNavigate();
+
     const handleClick = () => {
         navigate(`/search?q=${text}`);
+          
     }
 
     const handleSpeech = (t) => {

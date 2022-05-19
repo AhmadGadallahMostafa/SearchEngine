@@ -84,7 +84,10 @@ def getRelevantLinks():
         # get first paragraph
         firstParagraph = "Test"
         response.append({"title":title, "url":document.get("url"), "description":firstParagraph})    
-    response = jsonify(response)
+    Links = {"links":response}
+    response = jsonify(Links)
+
+    print(response.data)
     return response
     
 
