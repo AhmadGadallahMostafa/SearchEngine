@@ -2,12 +2,18 @@ from cmath import log
 from genericpath import exists
 from pydoc import doc
 from tokenize import Double
+from urllib import response
 from flask import Flask
 from flask_pymongo import PyMongo
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from flask import request
 import operator
+from flask import jsonify, abort, Response
+from bs4 import BeautifulSoup
+import requests
+import re
+
 
 
 app = Flask(__name__)
@@ -17,30 +23,33 @@ mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/SearchEngine")
 db = mongodb_client.db
 invertedIndex = db.get_collection("InvertedIndex")
 documentsCollection = db.get_collection("Documents")
+popularityCollection = db.get_collection("Popularity")
 ps = PorterStemmer()
 scoresMap = {}
+outgoingLinks = {}
 
 
 
 
 @app.route("/")
 def home():
-    print(db.get_collection("Documents").find_one())
+    getPopularity()
     return "Hello, Flask!"
 
 
 @app.route("/links", methods=['GET'])
-def get_all_users():
+def getRelevantLinks():
     # stem the words in the query
     if request.args.get('q') != None:
         query = request.args.get('q')
         query = query.lower()
         #split the query into words
-        query = query.split(" ")
+        query = query.split("_")
         query = [ps.stem(word) for word in query]
         print(query)
         # get the documents that contain the query words
         for word in query:
+            #remove white
             documents = invertedIndex.find({word:{"$exists":True}})
             try:
                 document = documents.next()
@@ -48,7 +57,7 @@ def get_all_users():
                 docContainsWordCount = 1
                 if docCurrentWord.keys() != None:
                     docContainsWordCount = len(docCurrentWord.keys())
-                currWordIDF = log(136 / docContainsWordCount) 
+                currWordIDF = log(5000/docContainsWordCount) 
                 for docID in docCurrentWord.keys():
                     curDoc = docCurrentWord.get(docID)
                     docWeight = calcWeightTF(curDoc)
@@ -59,16 +68,26 @@ def get_all_users():
                     else:
                         scoresMap[docID] = (currDocScore.real)
             except StopIteration:
-                print("No documents found")
+                continue
     sortedScores = sortScoresDescendingly()
+    # add titles to the documents
+    
     # get the documents from the database
     # get the documents that are in the sortedScores map and return them
+    response = []
     documents = [] 
     for docID in sortedScores.keys():
         documents.append(documentsCollection.find_one({"_id":docID}))
-    print(documents)
-
-    return "Hello, Flask!"
+    for document in documents:
+        #reqs = requests.get(document.get("url"))
+        #soup = BeautifulSoup(reqs.text, 'html.parser')
+        title = "title"
+        # get first paragraph
+        firstParagraph = "Test"
+        response.append({"title":title, "url":document.get("url"), "description":firstParagraph})    
+    response = jsonify(response)
+    return response
+    
 
 
 def calcWeightTF(doc):
@@ -110,7 +129,38 @@ def sortScoresDescendingly():
     sortedScores = sorted(sortedScores, key=operator.itemgetter(1), reverse=True)
     # convert list of to map
     sortedScores = dict(sortedScores)
-    print(sortedScores)
     return sortedScores
 
+# Implementing the page
+def getPopularity():
+    for url in popularityCollection.find():
+        # loop over keys of url
+        for key in url.keys():
+            # check if key is digit
+            if key.isdigit():
+                # get list of the key
+                listOfKey = url.get(key)
+                # check if key is in the map
+                if key in outgoingLinks:
+                    # loop over the list
+                    for link in listOfKey:
+                        # check if link is not in map if not appedn it
+                        if link not in outgoingLinks[key]:
+                            outgoingLinks[key].append(link)
+                else:
+                    outgoingLinks[key] = listOfKey
+    # now we need to loop over and calculate the rank of each page 
+    ingoingMap = {}
+    for key in outgoingLinks.keys():
+        if outgoingLinks.get(key) != None:
+            # first fetch the page with this url from the db
+            page = documentsCollection.find_one({"_id":key})
+            # add the number of ongoing links to the page
+            ingoingMap[documentsCollection.find_one({"_id":key})] = len(outgoingLinks.get(key))
+            # add to the map
+
+    print (ingoingMap)   
+    return outgoingLinks
+
+                   
 

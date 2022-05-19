@@ -7,31 +7,31 @@ import NavBar from './NavBar';
 function Search() {
     const [links, setLinks] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-    const [query, setQuery] = useState(window.location.search);
+    const [query, setQuery] = useState(window.location.search.split('=')[1]);
     let per_page = 10;
     
     /* initializing the search results*/
     useEffect(() => {
         const getLinks = async () => {
-            const res = await fetch(
-                `http://localhost:8000/Links?${query}_page=1&_per_page=${per_page}`
-            );
-            console.log(`http://localhost:8000/Links${query}_page=1&_per_page=${per_page}`);
+            fetch(`http://localhost:5000/links?q=${query}_page=1&_per_page=${per_page}`)
+                .then(response => response.json())
+                .then(data => console.log(data));
+            console.log(`http://localhost:5000/links${query}_page=1&_per_page=${per_page}`);
             const data = await res.json();
             const total = res.headers.get("x-total-count");
             setpageCount(Math.ceil(total / per_page));
             setLinks(data);
         }
         console.log(window.location.search);
-        setQuery(window.location.search);
+        setQuery(window.location.search.split('=')[1]);
         getLinks();
     }, [per_page, query]);
 
     /* handling pagination*/
     const fetchLinks = async (currentPage) => {
-        const res = await fetch(
-            `http://localhost:8000/Links?_page=${currentPage}&_per_page=${per_page}`
-        );
+        fetch(`http://localhost:5000/links?q=${query}_page=1&_per_page=${per_page}`)
+        .then(response => response.json())
+        .then(data => console.log(data));
         const data = await res.json();
         return data;
     };
