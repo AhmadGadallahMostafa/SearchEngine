@@ -1,6 +1,5 @@
 import './Search.css';
 import ReactPaginate from 'react-paginate';
-import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Links from './Pages';
 import NavBar from './NavBar';
@@ -8,26 +7,25 @@ import NavBar from './NavBar';
 function Search() {
     const [links, setLinks] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-
-    let t = window.location.search.split('=')[1];
-    if (t.indexOf('%20') !== -1) {
-        t = t.split('%20').join(' ');
-    }
-    console.log(t);
+    const [query, setQuery] = useState(window.location.search);
     let per_page = 10;
+    
     /* initializing the search results*/
     useEffect(() => {
         const getLinks = async () => {
             const res = await fetch(
-                `http://localhost:8000/Links?_page=1&_per_page=${per_page}`
+                `http://localhost:8000/Links?${query}_page=1&_per_page=${per_page}`
             );
+            console.log(`http://localhost:8000/Links${query}_page=1&_per_page=${per_page}`);
             const data = await res.json();
             const total = res.headers.get("x-total-count");
             setpageCount(Math.ceil(total / per_page));
             setLinks(data);
         }
+        console.log(window.location.search);
+        setQuery(window.location.search);
         getLinks();
-    }, [per_page]);
+    }, [per_page, query]);
 
     /* handling pagination*/
     const fetchLinks = async (currentPage) => {
