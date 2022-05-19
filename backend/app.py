@@ -43,7 +43,7 @@ def getRelevantLinks():
         query = request.args.get('q')
         query = query.lower()
         #split the query into words
-        query = query.split("_")
+        query = query.split("")
         query = [ps.stem(word) for word in query]
         print(query)
         # get the documents that contain the query words

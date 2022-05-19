@@ -34,14 +34,19 @@ function Search() {
         else {
             setText(t.split('%20').join(' '));
         }
+        // var config = {
+        //     headers: {'Access-Control-Allow-Origin': '*', 'Accept': 'application/json', 'Content-Type': 'application/json'}
+        // };
         const getLinks = async () => {
             axios.get(`http://localhost:5000/links?q=${query}&_page=1&_per_page=${per_page}`)
             .then(res => {
-            const data = res.data.links
-            console.log(res.data.links + " ana data");
-            const total = res.headers.get("x-total-count");
-            setpageCount(Math.ceil(total / per_page));
-            setLinks(data);
+            setTimeout(() => {
+                const data = res.data.links
+                const total = res.headers.get("x-total-count");
+                setpageCount(Math.ceil(total / per_page));
+                setLinks(data);
+                console.log(data);
+            }, 3000);
             }).catch(err => {
                 console.log(err);
             });
