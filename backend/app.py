@@ -11,7 +11,6 @@ from flask import request
 import operator
 from flask import jsonify, abort, Response
 from bs4 import BeautifulSoup
-import requests
 import re
 
 
@@ -163,4 +162,5 @@ def getPopularity():
     return outgoingLinks
 
                    
-
+if __name__ == "__main__":
+    app.run()
