@@ -20,11 +20,12 @@ function Speech({handleSpeech}) {
             setIsActive("mic-dis");
             setMicIcon(micIconDis);
             SpeechRecognition.stopListening();
+            handleSpeech(transcript);
         }
         else {
             setIsActive("mic-act");
             setMicIcon(micIconAct);
-            SpeechRecognition.startListening({ continuous: true, interimResults: true });
+            SpeechRecognition.startListening({ continuous: false, interimResults: true });
         }
     };
 
@@ -39,7 +40,6 @@ function Speech({handleSpeech}) {
                     <div className="speech-area">
                         <img src={micIcon} alt="microphone" className={isActive} id="mic-icon" onClick={handleClick} />
                     </div>
-                    <p>{transcript ? handleSpeech(transcript) : handleSpeech('')}</p>
                 </div>
             )
             }

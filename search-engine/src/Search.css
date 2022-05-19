@@ -66,13 +66,14 @@ input:focus {
 }
 .pagination {
     display: inline-block;
-    padding-inline-start: 12px;
+    padding-inline-start: 20px;
     margin-bottom: 5px;
 }
 
 .page-item{
     display: block;
     float: left;
+    margin-left: 10px;
 }
 
 .page-link {
@@ -115,4 +116,8 @@ input:focus {
     position: relative;
     top: -86px;
     left: 105px;
+}
+
+.reset-button:hover{
+    cursor: pointer;
 }

@@ -27,12 +27,13 @@ function NavBar() {
     }, []);
 
     const handleSpeech = (t) => {
-        setText(t);
+        setText(text + ' ' + t);
     }
 
     const handleReset = () => {
         console.log("ana geit");
         setText('');
+        console.log(text);
     }
 
     return (
