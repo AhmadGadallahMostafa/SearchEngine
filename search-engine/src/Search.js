@@ -1,5 +1,6 @@
 import './Search.css';
 import ReactPaginate from 'react-paginate';
+import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Links from './Pages';
 import NavBar from './NavBar';
@@ -8,6 +9,11 @@ function Search() {
     const [links, setLinks] = useState([]);
     const [pageCount, setpageCount] = useState(0);
 
+    let t = window.location.search.split('=')[1];
+    if (t.indexOf('%20') !== -1) {
+        t = t.split('%20').join(' ');
+    }
+    console.log(t);
     let per_page = 10;
     /* initializing the search results*/
     useEffect(() => {

@@ -14,7 +14,7 @@ root.render(
         <Route exact path="/" element={<Home />} />
       </Routes>
       <Routes>
-        <Route exact path="/search" element={<Search />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
       <Routes>
         <Route exact path="/speech" element={<Speech />} />
