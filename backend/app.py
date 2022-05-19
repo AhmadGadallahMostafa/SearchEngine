@@ -87,7 +87,7 @@ def getRelevantLinks():
     Links = {"links":response}
     response = jsonify(Links)
     response.headers.add("Access-Control-Allow-Origin", "*")
-
+    print(response.body)
     return response
     
 

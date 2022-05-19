@@ -8,7 +8,6 @@ import './Search.css';
 import search from './search.png';
 import logo from './logo.png';
 import reset from './reset.png';
-import axios from 'axios';
 
 function Search() {
     const [links, setLinks] = useState([]);
@@ -37,35 +36,51 @@ function Search() {
         // var config = {
         //     headers: {'Access-Control-Allow-Origin': '*', 'Accept': 'application/json', 'Content-Type': 'application/json'}
         // };
+        // async function getLinks() {
+        //     await fetch(`http://localhost:5000/links?q=${query}&_page=1&_per_page=${per_page}`)
+        //         .then(response => response.data)
+        //         .then(response => {
+        //             setLinks(response.links);
+        //             setpageCount(Math.ceil(response.headers.get('x-total-count')/per_page));
+        //             console.log(response.links);
+        // })
+        //         .catch(err => console.error(err));
+        // }
+        
         const getLinks = async () => {
-            axios.get(`http://localhost:5000/links?q=${query}&_page=1&_per_page=${per_page}`)
-            .then(res => {
-            setTimeout(() => {
-                const data = res.data.links
-                const total = res.headers.get("x-total-count");
-                setpageCount(Math.ceil(total / per_page));
-                setLinks(data);
-                console.log(links);
-            }, 3000);
-            }).catch(err => {
-                console.log(err);
-            });
+            const res = await fetch(
+                `http://localhost:5000/links?q=${query}&_page=1&_per_page=${per_page}`
+            );
+            const data = await res.json();
+            const total = res.headers.get("x-total-count");
+            setpageCount(Math.ceil(total / per_page));
+            setLinks(data.links);
+        }
             // const res = await fetch( 
             //     `http://localhost:5000/links?q=${query}&_page=1&_per_page=${per_page}`
             // );
             // console.log(res + "ana res");
             // const data = await res.json();
-        }
         getLinks();
-    }, [per_page, query, links]);
+    }, [per_page, query]);
 
     /* handling pagination*/
+    // const fetchLinks = async (currentPage) => {
+    //     await axios.get(`http://localhost:5000/links?q=${query}&_page=${currentPage}&_per_page=${per_page}`)
+    //     .then(res => res.data).then(res => {
+    //         setLinks(res.data.Links);
+    //         console.log(links);
+    //         return res.data.Links;
+    //     })};
+
     const fetchLinks = async (currentPage) => {
-        axios.get(`http://localhost:5000/links?q=${query}&_page=${currentPage}&_per_page=${per_page}`)
-        .then(res => {
-            const data = res.data
-            return data;
-        })};
+        const res = await fetch(
+            `http://localhost:5000/links?q=${query}&_page=${currentPage}&_per_page=${per_page}`
+        );
+        const data = await res.json();
+        return data.links;
+    }
+        
 
     const handlePageClick = async (data) => {
         let currentPage = data.selected + 1;
