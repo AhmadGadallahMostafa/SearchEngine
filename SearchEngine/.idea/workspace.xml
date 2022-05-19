@@ -7,7 +7,7 @@
     <list default="true" id="17298d71-367a-4a22-94d8-f8c0eaefb1df" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/ClassesInCSharp.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Downloads/google.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/google.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/test.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/testTwo.html" beforeDir="false" />
@@ -15,9 +15,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/Downloads/webco.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/crawlerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/crawlerTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/indexedURLs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/indexedURLs.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/DBAccessIndexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/DBAccessIndexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sourcePackage/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/state.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
