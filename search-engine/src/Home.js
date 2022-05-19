@@ -2,17 +2,15 @@ import './Home.css';
 import {useState} from 'react';
 import logo from './logo.png';
 import search from './search.png'; 
-import { useNavigate, createSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Speech from './Speech';
 import reset from './reset.png';
 
 function Home() {
     const [text, setText] = useState('');
-    const params = { 'q=': ''};
     let navigate = useNavigate();
     const handleClick = () => {
-        navigate({pathname: '/search',
-                search: `?${createSearchParams(params)}`,});
+        navigate(`/search?q=${text}`);
     }
 
     const handleSpeech = (t) => {
