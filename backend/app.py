@@ -24,9 +24,7 @@ invertedIndex = db.get_collection("InvertedIndex")
 documentsCollection = db.get_collection("Documents")
 popularityCollection = db.get_collection("Popularity")
 ps = PorterStemmer()
-scoresMap = {}
 outgoingLinks = {}
-
 
 
 
@@ -38,6 +36,7 @@ def home():
 
 @app.route("/links", methods=['GET'])
 def getRelevantLinks():
+    scoresMap = {}
     # stem the words in the query
     if request.args.get('q') != None:
         query = request.args.get('q')
@@ -68,7 +67,8 @@ def getRelevantLinks():
                         scoresMap[docID] = (currDocScore.real)
             except StopIteration:
                 continue
-    sortedScores = sortScoresDescendingly()
+    sortedScores = sortScoresDescendingly(scoresMap)
+    print(sortedScores)
     # add titles to the documents
     
     # get the documents from the database
@@ -87,7 +87,6 @@ def getRelevantLinks():
     Links = {"links":response}
     response = jsonify(Links)
     response.headers.add("Access-Control-Allow-Origin", "*")
-    print(response.body)
     return response
     
 
@@ -125,7 +124,7 @@ def calcWeightTF(doc):
     return (hFreq + liFreq + aFreq + pFreq + divFreq + titleFreq * 3)
 
 
-def sortScoresDescendingly():
+def sortScoresDescendingly(scoresMap):
     # sort accorindg to the value of the key
     sortedScores = scoresMap.items()
     sortedScores = sorted(sortedScores, key=operator.itemgetter(1), reverse=True)
