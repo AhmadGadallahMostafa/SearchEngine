@@ -45,7 +45,7 @@ function Search() {
                 const total = res.headers.get("x-total-count");
                 setpageCount(Math.ceil(total / per_page));
                 setLinks(data);
-                console.log(data);
+                console.log(links);
             }, 3000);
             }).catch(err => {
                 console.log(err);
@@ -57,16 +57,15 @@ function Search() {
             // const data = await res.json();
         }
         getLinks();
-    }, [per_page, query]);
+    }, [per_page, query, links]);
 
     /* handling pagination*/
     const fetchLinks = async (currentPage) => {
-        const res = await fetch(
-            `http://localhost:5000/links?q=${query}&_page=${currentPage}&_per_page=${per_page}`
-        );
-        const data = await res.json();
-        return data;
-    };
+        axios.get(`http://localhost:5000/links?q=${query}&_page=${currentPage}&_per_page=${per_page}`)
+        .then(res => {
+            const data = res.data
+            return data;
+        })};
 
     const handlePageClick = async (data) => {
         let currentPage = data.selected + 1;
