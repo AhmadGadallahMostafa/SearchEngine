@@ -14,7 +14,7 @@ function Search() {
     useEffect(() => {
         const getLinks = async () => {
             const res = await fetch(
-                `http://localhost:8000/Links?${query}_page=1&_per_page=${per_page}`
+                `http://localhost:8000/Links${query}_page=1&_per_page=${per_page}`
             );
             console.log(`http://localhost:8000/Links${query}_page=1&_per_page=${per_page}`);
             const data = await res.json();
@@ -36,6 +36,10 @@ function Search() {
         return data;
     };
 
+    const handleQuery = (q) => {
+        setQuery(q);
+    };
+
     const handlePageClick = async (data) => {
         let currentPage = data.selected + 1;
         console.log(currentPage);
@@ -46,7 +50,7 @@ function Search() {
 
     return (
         <div>
-            <NavBar />
+            <NavBar handleQ = {handleQuery} />
             <Links links={links} />
             <ReactPaginate
                 previousLabel={"<"}

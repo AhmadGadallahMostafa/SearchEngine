@@ -7,12 +7,13 @@ import search from './search.png';
 import logo from './logo.png';
 import reset from './reset.png';
 
-function NavBar() {
+function NavBar({handleQ}) {
 
     const [text, setText] = useState(null);
     let navigate = useNavigate();
     /* handling search button click*/
     const handleClick = () => {
+        handleQ(text);
         navigate(`/search?q=${text}`);
     }
 
@@ -31,7 +32,6 @@ function NavBar() {
     }
 
     const handleReset = () => {
-        console.log("ana geit");
         setText('');
         console.log(text);
     }
